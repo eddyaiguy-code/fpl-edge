@@ -159,123 +159,63 @@ function buildFallbackWhyBuy(player: ProcessedPlayer) {
   const toughCount = player.next3Fixtures.filter(f => f.difficulty >= 4).length;
   const homeCount = player.next3Fixtures.filter(f => f.isHome).length;
 
-  const fixtureHook = [
-    `{name} is a fixture‑driven buy: the next 3 lean friendly and you get {home} home dates to capitalize.`,
-    `The short‑term schedule screams upside for {name} — the home/away split is kind and the ceiling is real.`,
-    `{name} has a runway right now: two good matchups and home advantage make this a short‑term strike.`,
+  const hookPool = [
+    `{name} is the kind of buy you make because the role feels sticky and the next run invites immediate returns.`,
+    `{name} is the one I’d move for now because his minutes and form point to a haul in the short window.`,
+    `{name} is a bold but smart move right now — the setup is there for a swing in the next couple of weeks.`,
+    `{name} is the momentum pick I’d back; the context around him screams short‑term upside.`,
+    `{name} is the squad‑shaper this week — he’s the one who can shift rank quickly if he hits.`,
   ];
 
-  const formHook = [
-    `{name} is in real form — {ppg} PPG over recent weeks is not noise, it’s output you can bank.`,
-    `{name} is coming in hot: form {form} with steady minutes makes him the obvious “play the streak” pick.`,
-    `{name} is the one riding momentum right now — the recent returns justify the buy even before fixtures.`,
-  ];
+  const opener = hookPool[player.id % hookPool.length].replace('{name}', player.name);
 
-  const differentialHook = [
-    `{name} is a classic differential with secure minutes — the upside is rank‑moving if he pops.`,
-    `{name} gives you a low‑owned edge without the rotation headache — that’s the appeal.`,
-    `{name} is the off‑template pick who still plays — that combo is rare and valuable.`,
-  ];
-
-  const projectionHook = [
-    `{name} is projected well for the next GW — this is a short‑term expected‑points play.`,
-    `{name} rates strongly in the model for the immediate window, which makes him a clean buy now.`,
-    `{name} has a strong near‑term projection — you’re buying the next 2–3 GWs, not just the season.`,
-  ];
-
-  const budgetHook = [
-    `{name} is the budget enabler who still returns — price makes him an easy squad unlock.`,
-    `{name} offers genuine output for the price, which is exactly what a budget slot should do.`,
-    `{name} is value‑first: cheap, playable, and with enough upside to matter.`,
-  ];
-
-  const premiumHook = [
-    `{name} is a premium you buy for captaincy‑adjacent output — the price is steep but the ceiling is higher.`,
-    `{name} is the premium with the most reliable floor — you pay up for security plus haul potential.`,
-    `{name} is the big‑ticket pick here; you’re buying star‑level upside, not just fixtures.`,
-  ];
-
-  const braveHook = [
-    `{name} is a brave buy against the fixture grain — you’re betting on talent over schedule.`,
-    `{name} is a conviction pick despite a tough run — the bet is on role and quality.`,
-    `{name} is the high‑risk/high‑reward play even with harder opponents on deck.`,
-  ];
-
-  const openerPool = (easyCount >= 2 && homeCount >= 2) ? fixtureHook
-    : (player.form >= 7 && player.pointsPerGame >= 5) ? formHook
-    : (player.ownershipPct < 10 && player.minutes >= 600) ? differentialHook
-    : (player.epNext >= 5) ? projectionHook
-    : (player.price <= 5.0) ? budgetHook
-    : (player.price >= 10.0) ? premiumHook
-    : (toughCount >= 2) ? braveHook
-    : formHook;
-
-  const opener = openerPool[player.id % openerPool.length]
-    .replace('{name}', player.name)
-    .replace('{home}', String(homeCount))
-    .replace('{ppg}', player.pointsPerGame.toFixed(1))
-    .replace('{form}', player.form.toFixed(1));
-
-  const fixtureRun = easyCount >= 2
-    ? 'a strong short‑term run'
+  const fixtureNod = easyCount >= 2
+    ? 'The near‑term run is kind, especially with home advantage in the mix.'
     : toughCount >= 2
-      ? 'a tough short‑term run'
-      : 'a mixed short‑term run';
+      ? 'It’s not the easiest stretch, but talent can still beat the schedule.'
+      : 'The schedule is mixed, which makes his role even more important than the fixtures.';
 
   const minutesNote = player.minutes >= 900
-    ? 'Minutes suggest he’s first‑choice.'
+    ? 'He’s logging serious minutes, so you’re buying reliability as much as upside.'
     : player.minutes >= 450
-      ? 'Minutes are decent but not nailed.'
-      : 'Minutes are low — rotation risk.';
+      ? 'Minutes are solid but not fully nailed, so there’s a small rotation tax.'
+      : 'Minutes are light, so this is a higher‑risk swing.';
+
+  const ownershipNote = player.ownershipPct < 10
+    ? 'He stays differential, which is exactly how you make ground if he pops.'
+    : player.ownershipPct >= 20
+      ? 'He’s already popular, so this is as much protection as it is attack.'
+      : 'He’s trending into the template, which usually isn’t an accident.';
+
+  const marketNod = player.netTransfersEvent > 0
+    ? 'The market is leaning his way, but the case stands even without the hype.'
+    : player.netTransfersEvent < 0
+      ? 'The market is cooling a touch, which could make this the right contrarian moment.'
+      : 'The market is quiet, which keeps this move purely about your conviction.';
 
   const availabilityNote = player.chanceNext !== null && player.chanceNext < 75
-    ? `Availability risk (${player.chanceNext}% chance of playing).`
+    ? `Just keep an eye on availability (${player.chanceNext}% chance of playing).`
     : player.status !== 'a'
-      ? 'Availability risk flagged.'
-      : '';
-
-  const valueNote = player.pointsPerMillion >= 0.7
-    ? `Value looks strong at £${player.price.toFixed(1)}m (${player.pointsPerMillion.toFixed(2)} PPM).`
-    : `Premium price tag at £${player.price.toFixed(1)}m — needs returns to justify it.`;
-
-  const ceilingNote = player.epNext >= 5
-    ? 'Expected points look healthy for a haul.'
-    : 'Ceiling leans on current form rather than fixtures.';
-
-  const ownershipNote = player.ownershipPct >= 20
-    ? `He’s widely owned (${player.ownershipPct.toFixed(1)}%), so you’re mostly protecting rank.`
-    : player.ownershipPct >= 10
-      ? `He’s getting popular (${player.ownershipPct.toFixed(1)}%) — you’re not alone.`
-      : `He’s a differential at ${player.ownershipPct.toFixed(1)}% — upside if he hits.`;
-
-  const transferNote = player.netTransfersEvent > 0
-    ? `Market momentum is with him (${player.netTransfersEvent.toLocaleString()} net in).`
-    : player.netTransfersEvent < 0
-      ? `Market momentum is cooling (${Math.abs(player.netTransfersEvent).toLocaleString()} net out).`
-      : 'Market momentum is flat this week.';
-
-  const priceNote = player.priceChangeEvent > 0
-    ? `Price just rose £${(player.priceChangeEvent / 10).toFixed(1)}m.`
-    : player.priceChangeEvent < 0
-      ? `Price just dipped £${(Math.abs(player.priceChangeEvent) / 10).toFixed(1)}m.`
+      ? 'Just keep an eye on availability flags.'
       : '';
 
   const verdict = easyCount >= 2 && player.minutes >= 450
-    ? 'Verdict: buy now and ride the short‑term run.'
+    ? 'If you’re moving now, he’s one of the cleanest short‑term buys.'
     : toughCount >= 2
-      ? 'Verdict: buy only if you need his role — fixtures are a headwind.'
-      : 'Verdict: viable buy if the role fits your squad build.';
+      ? 'I’d only pull the trigger if his role fits your plan — the fixtures add risk.'
+      : 'He’s a sensible buy if your squad needs that specific profile.';
 
-  return [
+  const sentences = [
     opener,
-    `Fixtures show ${fixtureRun} (${homeCount} home in the next 3).`,
-    minutesNote,
+    fixtureNod + ' ' + minutesNote,
+    ownershipNote + ' ' + marketNod,
     availabilityNote,
-    valueNote,
-    ceilingNote,
-    `${ownershipNote} ${transferNote} ${priceNote}`.trim(),
     verdict,
-  ].join(' ').replace(/\s+/g, ' ').trim();
+  ].filter(Boolean);
+
+  // Return 3–4 sentences max
+  const final = sentences.length > 4 ? sentences.slice(0, 4) : sentences
+  return final.join(' ').replace(/\s+/g, ' ').trim();
 }
 
 export async function GET() {
