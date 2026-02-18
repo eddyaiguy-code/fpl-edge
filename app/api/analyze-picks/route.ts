@@ -155,29 +155,16 @@ async function searxngSearch(query: string, player: ProcessedPlayer) {
 }
 
 function buildFallbackWhyBuy(player: ProcessedPlayer) {
-  const ownershipLabel = player.ownershipPct >= 20
-    ? 'highly owned'
-    : player.ownershipPct >= 10
-      ? 'popular'
-      : player.ownershipPct >= 5
-        ? 'mid‑owned'
-        : 'differential';
-
-  const transferText = player.netTransfersEvent > 0
-    ? `Rising in transfers (${player.netTransfersEvent.toLocaleString()} net in)`
-    : player.netTransfersEvent < 0
-      ? `Falling in transfers (${Math.abs(player.netTransfersEvent).toLocaleString()} net out)`
-      : 'Flat transfer momentum this week';
-
-  const priceText = player.priceChangeEvent > 0
-    ? `price just rose £${(player.priceChangeEvent / 10).toFixed(1)}m`
-    : player.priceChangeEvent < 0
-      ? `price just dropped £${(Math.abs(player.priceChangeEvent) / 10).toFixed(1)}m`
-      : 'price stable';
-
   const easyCount = player.next3Fixtures.filter(f => f.difficulty <= 2).length;
   const toughCount = player.next3Fixtures.filter(f => f.difficulty >= 4).length;
   const homeCount = player.next3Fixtures.filter(f => f.isHome).length;
+
+  const opener = easyCount >= 2
+    ? `You're buying ${player.name} for immediate upside — the next run is a gift if he keeps his minutes.`
+    : player.minutes >= 900 && player.form >= 6
+      ? `${player.name} is producing like a first‑choice pick — you’re paying for involvement more than fixtures.`
+      : `${player.name} offers a punt with upside if the role holds over the next 2–3 GWs.`;
+
   const fixtureRun = easyCount >= 2
     ? 'a strong short‑term run'
     : toughCount >= 2
@@ -197,22 +184,47 @@ function buildFallbackWhyBuy(player: ProcessedPlayer) {
       : '';
 
   const valueNote = player.pointsPerMillion >= 0.7
-    ? `Strong value at £${player.price.toFixed(1)}m (${player.pointsPerMillion.toFixed(2)} PPM).`
-    : `Premium priced at £${player.price.toFixed(1)}m — needs returns to justify it.`;
+    ? `Value looks strong at £${player.price.toFixed(1)}m (${player.pointsPerMillion.toFixed(2)} PPM).`
+    : `Premium price tag at £${player.price.toFixed(1)}m — needs returns to justify it.`;
 
   const ceilingNote = player.epNext >= 5
-    ? 'Expected points outlook is solid for a haul.'
+    ? 'Expected points look healthy for a haul.'
     : 'Ceiling leans on current form rather than fixtures.';
 
-  const verdict = player.ownershipPct < 10 && easyCount >= 2
-    ? 'Verdict: buy as a differential with upside over the next 2–3 GWs.'
-    : player.ownershipPct >= 20 && toughCount >= 2
-      ? 'Verdict: consider a short‑term hold rather than a fresh buy.'
-      : 'Verdict: viable buy if you need his role/price point.';
+  const ownershipNote = player.ownershipPct >= 20
+    ? `He’s widely owned (${player.ownershipPct.toFixed(1)}%), so you’re mostly protecting rank.`
+    : player.ownershipPct >= 10
+      ? `He’s getting popular (${player.ownershipPct.toFixed(1)}%) — you’re not alone.`
+      : `He’s a differential at ${player.ownershipPct.toFixed(1)}% — upside if he hits.`;
 
-  return `${transferText}; ${ownershipLabel} at ${player.ownershipPct.toFixed(1)}% with ${priceText}. ` +
-    `Fixtures show ${fixtureRun} (${homeCount} home in the next 3). ${minutesNote} ${availabilityNote} ` +
-    `${valueNote} ${ceilingNote} ${verdict}`.replace(/\s+/g, ' ').trim();
+  const transferNote = player.netTransfersEvent > 0
+    ? `Market momentum is with him (${player.netTransfersEvent.toLocaleString()} net in).`
+    : player.netTransfersEvent < 0
+      ? `Market momentum is cooling (${Math.abs(player.netTransfersEvent).toLocaleString()} net out).`
+      : 'Market momentum is flat this week.';
+
+  const priceNote = player.priceChangeEvent > 0
+    ? `Price just rose £${(player.priceChangeEvent / 10).toFixed(1)}m.`
+    : player.priceChangeEvent < 0
+      ? `Price just dipped £${(Math.abs(player.priceChangeEvent) / 10).toFixed(1)}m.`
+      : '';
+
+  const verdict = easyCount >= 2 && player.minutes >= 450
+    ? 'Verdict: buy now and ride the short‑term run.'
+    : toughCount >= 2
+      ? 'Verdict: buy only if you need his role — fixtures are a headwind.'
+      : 'Verdict: viable buy if the role fits your squad build.';
+
+  return [
+    opener,
+    `Fixtures show ${fixtureRun} (${homeCount} home in the next 3).`,
+    minutesNote,
+    availabilityNote,
+    valueNote,
+    ceilingNote,
+    `${ownershipNote} ${transferNote} ${priceNote}`.trim(),
+    verdict,
+  ].join(' ').replace(/\s+/g, ' ').trim();
 }
 
 export async function GET() {
