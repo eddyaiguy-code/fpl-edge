@@ -9,6 +9,7 @@ import PlayerTable from './components/PlayerTable';
 interface FPLData {
   players: ProcessedPlayer[];
   currentGameweek: number;
+  nextGameweek: number;
   lastUpdated: string;
 }
 
@@ -72,7 +73,7 @@ export default function Home() {
             <h1 className="text-3xl font-bold text-white">FPL Edge</h1>
           </div>
           <p className="text-gray-400">
-            Fantasy Premier League Transfer Optimizer • GW{data.currentGameweek}
+            Fantasy Premier League Transfer Optimizer • GW{data.currentGameweek} (next: GW{data.nextGameweek})
           </p>
           <p className="text-xs text-gray-600 mt-1">
             Last updated: {new Date(data.lastUpdated).toLocaleString()}
@@ -99,7 +100,7 @@ export default function Home() {
         </div>
 
         {/* Top 5 Picks */}
-        <TopPicks players={data.players} />
+        <TopPicks players={data.players} currentGameweek={data.nextGameweek} />
 
         {/* Filters */}
         <Filters 

@@ -25,18 +25,19 @@ export async function GET() {
     
     const fixtures: FPLFixture[] = await fixturesRes.json();
 
-    // Get current gameweek
+    // Get current and next gameweek
     const currentEvent = bootstrapData.events?.find(e => e.is_current)?.id || 
                         bootstrapData.events?.find(e => e.is_next)?.id || 1;
+    const nextEvent = bootstrapData.events?.find(e => e.is_next)?.id || (currentEvent + 1);
 
     // Create lookup maps
     const teamMap = new Map(bootstrapData.teams.map(t => [t.id, t]));
     const positionMap = new Map(bootstrapData.element_types.map(p => [p.id, p]));
 
-    // Get next 3 fixtures for each team
+    // Get next 3 fixtures for each team (from next gameweek)
     const getNext3Fixtures = (teamId: number) => {
       const teamFixtures = fixtures
-        .filter(f => !f.finished && (f.team_h === teamId || f.team_a === teamId))
+        .filter(f => !f.finished && (f.event || 999) >= nextEvent && (f.team_h === teamId || f.team_a === teamId))
         .sort((a, b) => (a.event || 999) - (b.event || 999))
         .slice(0, 3);
 
@@ -64,6 +65,11 @@ export async function GET() {
         const form = parseFloat(player.form) || 0;
         const pointsPerGame = parseFloat(player.points_per_game) || 0;
         const pointsPerMillion = price > 0 ? pointsPerGame / price : 0;
+        const ownershipPct = parseFloat(player.selected_by_percent) || 0;
+        const netTransfersEvent = (player.transfers_in_event || 0) - (player.transfers_out_event || 0);
+        const priceChangeEvent = player.cost_change_event || 0;
+        const priceChangeStart = player.cost_change_start || 0;
+        const epNext = parseFloat(player.ep_next) || 0;
         
         const next3Fixtures = getNext3Fixtures(player.team);
         const avgNext3Difficulty = next3Fixtures.length > 0
@@ -85,6 +91,14 @@ export async function GET() {
           form,
           pointsPerGame,
           pointsPerMillion,
+          ownershipPct,
+          netTransfersEvent,
+          priceChangeEvent,
+          priceChangeStart,
+          chanceNext: player.chance_of_playing_next_round,
+          status: player.status,
+          news: player.news,
+          epNext,
           next3Fixtures,
           avgNext3Difficulty,
           transferValueScore,
@@ -94,6 +108,7 @@ export async function GET() {
     return NextResponse.json({
       players: processedPlayers,
       currentGameweek: currentEvent,
+      nextGameweek: nextEvent,
       lastUpdated: new Date().toISOString(),
     });
 

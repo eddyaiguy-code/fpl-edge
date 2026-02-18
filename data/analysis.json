@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-02-18T17:24:37.658Z",
+  "analyses": [
+    {
+      "playerId": 249,
+      "playerName": "João Pedro",
+      "teamShort": "CHE",
+      "price": 7.7,
+      "pickScore": 15.7,
+      "whyBuy": "The next three fixtures are mixed (vsBUR (FDR 1), @ARS (FDR 5), @AVL (FDR 4)), which keeps his pick score high. Form 10 with 5.1 PPG at £7.7m makes the value case clear.",
+      "news": []
+    },
+    {
+      "playerId": 235,
+      "playerName": "Palmer",
+      "teamShort": "CHE",
+      "price": 10.6,
+      "pickScore": 12.5,
+      "whyBuy": "The next three fixtures are mixed (vsBUR (FDR 1), @ARS (FDR 5), @AVL (FDR 4)), which keeps his pick score high. Form 8.5 with 5.3 PPG at £10.6m makes the value case clear. Latest team news: Chelsea injury update: Palmer, Cucurella, Lavia latest return dates.",
+      "news": [
+        {
+          "title": "Chelsea injury update: Palmer, Cucurella, Lavia latest return dates",
+          "url": "https://www.standard.co.uk/sport/football/chelsea-fc-injury-update-palmer-cucurella-lavia-latest-news-return-dates-b1271059.html",
+          "snippet": "7 hours ago — Cole Palmer was left out of the Chelsea squad against Hull. This was despite Palmer having scored four goals in his last two appearances for the Blues."
+        }
+      ]
+    },
+    {
+      "playerId": 82,
+      "playerName": "Semenyo",
+      "teamShort": "MCI",
+      "price": 7.9,
+      "pickScore": 12.4,
+      "whyBuy": "The next three fixtures are mixed (vsNEW (FDR 3), @LEE (FDR 3), vsNFO (FDR 2)), which keeps his pick score high. Form 7.8 with 6.1 PPG at £7.9m makes the value case clear.",
+      "news": []
+    },
+    {
+      "playerId": 373,
+      "playerName": "Virgil",
+      "teamShort": "LIV",
+      "price": 5.9,
+      "pickScore": 12.2,
+      "whyBuy": "The next three fixtures are favorable (@NFO (FDR 3), vsWHU (FDR 2), @WOL (FDR 2)), which keeps his pick score high. Form 7.5 with 4.3 PPG at £5.9m makes the value case clear.",
+      "news": []
+    },
+    {
+      "playerId": 32,
+      "playerName": "Martinez",
+      "teamShort": "AVL",
+      "price": 5,
+      "pickScore": 10.3,
+      "whyBuy": "The next three fixtures are favorable (vsLEE (FDR 2), @WOL (FDR 2), vsCHE (FDR 3)), which keeps his pick score high. Form 6.5 with 4.2 PPG at £5.0m makes the value case clear. Latest team news: Aston Villa news: Does Emery have to deliver a trophy? - BBC Sport.",
+      "news": [
+        {
+          "title": "Aston Villa news: Does Emery have to deliver a trophy? - BBC Sport",
+          "url": "https://www.bbc.com/sport/football/articles/c0q315kd8qeo",
+          "snippet": "6 hours ago — Bizot's suspension is a new worry given the persistent fitness problems experienced by Emi Martinez this season. Despite their recent stumbles, attributable at ..."
+        }
+      ]
+    }
+  ]
+}

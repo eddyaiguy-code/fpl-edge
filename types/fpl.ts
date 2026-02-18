@@ -16,6 +16,17 @@ export interface FPLPlayer {
   form: string;
   points_per_game: string;
   minutes: number;
+  selected_by_percent: string;
+  transfers_in_event: number;
+  transfers_out_event: number;
+  transfers_in: number;
+  transfers_out: number;
+  status: string;
+  news: string;
+  chance_of_playing_next_round: number | null;
+  cost_change_event: number;
+  cost_change_start: number;
+  ep_next: string;
 }
 
 export interface FPLFixture {
@@ -57,6 +68,14 @@ export interface ProcessedPlayer {
   form: number;
   pointsPerGame: number;
   pointsPerMillion: number;
+  ownershipPct: number;
+  netTransfersEvent: number;
+  priceChangeEvent: number;
+  priceChangeStart: number;
+  chanceNext: number | null;
+  status: string;
+  news: string;
+  epNext: number;
   next3Fixtures: {
     opponent: string;
     difficulty: number;
