@@ -108,6 +108,7 @@ async function fetchFPLData(): Promise<ProcessedPlayer[]> {
         form,
         pointsPerGame,
         pointsPerMillion,
+        minutes: player.minutes,
         ownershipPct,
         netTransfersEvent,
         priceChangeEvent,

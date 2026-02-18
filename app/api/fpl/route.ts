@@ -91,6 +91,7 @@ export async function GET() {
           form,
           pointsPerGame,
           pointsPerMillion,
+          minutes: player.minutes,
           ownershipPct,
           netTransfersEvent,
           priceChangeEvent,

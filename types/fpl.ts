@@ -68,6 +68,7 @@ export interface ProcessedPlayer {
   form: number;
   pointsPerGame: number;
   pointsPerMillion: number;
+  minutes: number;
   ownershipPct: number;
   netTransfersEvent: number;
   priceChangeEvent: number;
