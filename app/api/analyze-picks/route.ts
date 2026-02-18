@@ -159,11 +159,62 @@ function buildFallbackWhyBuy(player: ProcessedPlayer) {
   const toughCount = player.next3Fixtures.filter(f => f.difficulty >= 4).length;
   const homeCount = player.next3Fixtures.filter(f => f.isHome).length;
 
-  const opener = easyCount >= 2
-    ? `You're buying ${player.name} for immediate upside — the next run is a gift if he keeps his minutes.`
-    : player.minutes >= 900 && player.form >= 6
-      ? `${player.name} is producing like a first‑choice pick — you’re paying for involvement more than fixtures.`
-      : `${player.name} offers a punt with upside if the role holds over the next 2–3 GWs.`;
+  const fixtureHook = [
+    `{name} is a fixture‑driven buy: the next 3 lean friendly and you get {home} home dates to capitalize.`,
+    `The short‑term schedule screams upside for {name} — the home/away split is kind and the ceiling is real.`,
+    `{name} has a runway right now: two good matchups and home advantage make this a short‑term strike.`,
+  ];
+
+  const formHook = [
+    `{name} is in real form — {ppg} PPG over recent weeks is not noise, it’s output you can bank.`,
+    `{name} is coming in hot: form {form} with steady minutes makes him the obvious “play the streak” pick.`,
+    `{name} is the one riding momentum right now — the recent returns justify the buy even before fixtures.`,
+  ];
+
+  const differentialHook = [
+    `{name} is a classic differential with secure minutes — the upside is rank‑moving if he pops.`,
+    `{name} gives you a low‑owned edge without the rotation headache — that’s the appeal.`,
+    `{name} is the off‑template pick who still plays — that combo is rare and valuable.`,
+  ];
+
+  const projectionHook = [
+    `{name} is projected well for the next GW — this is a short‑term expected‑points play.`,
+    `{name} rates strongly in the model for the immediate window, which makes him a clean buy now.`,
+    `{name} has a strong near‑term projection — you’re buying the next 2–3 GWs, not just the season.`,
+  ];
+
+  const budgetHook = [
+    `{name} is the budget enabler who still returns — price makes him an easy squad unlock.`,
+    `{name} offers genuine output for the price, which is exactly what a budget slot should do.`,
+    `{name} is value‑first: cheap, playable, and with enough upside to matter.`,
+  ];
+
+  const premiumHook = [
+    `{name} is a premium you buy for captaincy‑adjacent output — the price is steep but the ceiling is higher.`,
+    `{name} is the premium with the most reliable floor — you pay up for security plus haul potential.`,
+    `{name} is the big‑ticket pick here; you’re buying star‑level upside, not just fixtures.`,
+  ];
+
+  const braveHook = [
+    `{name} is a brave buy against the fixture grain — you’re betting on talent over schedule.`,
+    `{name} is a conviction pick despite a tough run — the bet is on role and quality.`,
+    `{name} is the high‑risk/high‑reward play even with harder opponents on deck.`,
+  ];
+
+  const openerPool = (easyCount >= 2 && homeCount >= 2) ? fixtureHook
+    : (player.form >= 7 && player.pointsPerGame >= 5) ? formHook
+    : (player.ownershipPct < 10 && player.minutes >= 600) ? differentialHook
+    : (player.epNext >= 5) ? projectionHook
+    : (player.price <= 5.0) ? budgetHook
+    : (player.price >= 10.0) ? premiumHook
+    : (toughCount >= 2) ? braveHook
+    : formHook;
+
+  const opener = openerPool[player.id % openerPool.length]
+    .replace('{name}', player.name)
+    .replace('{home}', String(homeCount))
+    .replace('{ppg}', player.pointsPerGame.toFixed(1))
+    .replace('{form}', player.form.toFixed(1));
 
   const fixtureRun = easyCount >= 2
     ? 'a strong short‑term run'
